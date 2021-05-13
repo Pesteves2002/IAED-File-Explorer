@@ -18,46 +18,35 @@
 #define FIND_ACTION "find: Imprime o valor armazenado."
 #define LIST_ACTION "list: Lista todos os componentes de um caminho."
 #define SEARCH_ACTION "search: Procura o caminho dado um valor."
-#define DEL_ACTION "Apaga um caminho e todos os subcaminhos."
+#define DEL_ACTION "delete: Apaga um caminho e todos os subcaminhos."
 
 #define NUM_CMD 8
 #define CMD_SZ 10
 
 void help_func();
 
-int main()
-{
-    char ler_input[CMD_SZ];
+int main() {
+	char ler_input[CMD_SZ];
 
-    scanf("%s", ler_input);
+	scanf("%s", ler_input);
 
-    while (strcmp(ler_input, QUIT_CMD))
-    {
-        if (!strcmp(ler_input, HELP_CMD))
-            help_func();
+	while (strcmp(ler_input, QUIT_CMD)) {
+		if (!strcmp(ler_input, HELP_CMD)) help_func();
 
-        scanf("%s", ler_input);
-    }
+		scanf("%s", ler_input);
+	}
 
-    return 0;
+	return 0;
 }
 
-void help_func()
-{
-    char *list[NUM_CMD] = {
-        HELP_ACTION,
-        QUIT_ACTION,
-        SET_ACTION,
-        PRINT_ACTION,
-        FIND_ACTION,
-        LIST_ACTION,
-        SEARCH_ACTION,
-        DEL_ACTION,
-    };
-    int i;
+void help_func() {
+	char *list[NUM_CMD] = {
+			HELP_ACTION, QUIT_ACTION, SET_ACTION,    PRINT_ACTION,
+			FIND_ACTION, LIST_ACTION, SEARCH_ACTION, DEL_ACTION,
+	};
+	int i;
 
-    for (i = 0; i < NUM_CMD; ++i)
-    {
-        printf("%s\n", list[i]);
-    }
+	for (i = 0; i < NUM_CMD; ++i) {
+		printf("%s\n", list[i]);
+	}
 }
