@@ -50,3 +50,12 @@ void help_func() {
 		printf("%s\n", list[i]);
 	}
 }
+
+/*
+
+LinkedList (talvez double, ou ent tens de guardar ponteiro para o fim) -
+adicionar ao criar, para usar no print
+Binary Tree para ordenação por ordem alfabética
+Hashtable (ainda n sei bem se vai dar por causa da ordenacao)
+
+*/
