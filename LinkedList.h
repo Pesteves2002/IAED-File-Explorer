@@ -9,18 +9,15 @@
 /* anterior e usado para facilmente se retirar o elemento no caso de dar
  * delete*/
 
-struct node {
+typedef struct node {
 	char *text;
-	struct node *prev, *next;
-};
+	struct node *next;
+} * link;
 
-typedef struct node Node;
-typedef struct node *link;
-
-void print(link head);
-link NEW(char *buffer);
+link NEW_Node(char *buffer);
 link insertEnd(link head, char *text);
 link delete_search(link head, char *text);
 void FREEnode(link t);
+void print(link head);
 
 #endif

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "LinkedList.h"
+
 #define HELP_CMD "help"
 #define QUIT_CMD "quit"
 #define SET_CMD "set"
@@ -22,16 +24,25 @@
 
 #define NUM_CMD 8
 #define CMD_SZ 10
+#define MAX_SIZE 66666
 
 void help_func();
+void set_func(link* order);
 
 int main() {
 	char ler_input[CMD_SZ];
-
+	link order = NULL;
 	scanf("%s", ler_input);
 
 	while (strcmp(ler_input, QUIT_CMD)) {
 		if (!strcmp(ler_input, HELP_CMD)) help_func();
+
+		if (!strcmp(ler_input, SET_CMD)) set_func(&order);
+
+		if (!strcmp(ler_input, PRINT_CMD)) {
+			print(order);
+			printf("lido\n");
+		}
 
 		scanf("%s", ler_input);
 	}
@@ -40,7 +51,7 @@ int main() {
 }
 
 void help_func() {
-	char *list[NUM_CMD] = {
+	char* list[NUM_CMD] = {
 			HELP_ACTION, QUIT_ACTION, SET_ACTION,    PRINT_ACTION,
 			FIND_ACTION, LIST_ACTION, SEARCH_ACTION, DEL_ACTION,
 	};
@@ -51,11 +62,10 @@ void help_func() {
 	}
 }
 
-/*
+void set_func(link* order) {
+	char buffer[MAX_SIZE];
+	scanf("%s", buffer);
+	*order = insertEnd(*order, buffer);
 
-LinkedList (talvez double, ou ent tens de guardar ponteiro para o fim) -
-adicionar ao criar, para usar no print
-Binary Tree para ordenação por ordem alfabética
-Hashtable (ainda n sei bem se vai dar por causa da ordenacao)
-
-*/
+	printf("sucesso\n");
+}
