@@ -1,0 +1,4 @@
+set ola
+set bruh
+set c
+print quit
