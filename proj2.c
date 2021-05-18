@@ -37,11 +37,49 @@ int main() {
 	while (strcmp(ler_input, QUIT_CMD)) {
 		if (!strcmp(ler_input, HELP_CMD)) help_func();
 
-		if (!strcmp(ler_input, SET_CMD)) set_func(&order);
+		if (!strcmp(ler_input, SET_CMD)) {
+			getchar();
+			set_func(&order);
+		}
 
 		if (!strcmp(ler_input, PRINT_CMD)) {
-			print(order);
-			printf("lido\n");
+			char path[67000] = {0};
+			print(order, path, 0);
+		}
+
+		if (!strcmp(ler_input, FIND_CMD)) {
+			char work[67000] = {0};
+			int i;
+			scanf("%s", work);
+			i = strlen(work);
+			while (work[--i] == '/') work[i] = '\0';
+			strcpy(work, find_func(order, work));
+			if (strcmp(work, "0")) printf("%s\n", work);
+		}
+
+		if (!strcmp(ler_input, LIST_CMD)) {
+			char work[67000] = {0};
+			char c = getchar();
+			int i;
+			link x = order;
+			if (c != '\n') {
+				scanf("%s", work);
+				i = strlen(work);
+				while (work[--i] == '/') work[i] = '\0';
+				if ((list_func(order, work))) printf("not found\n");
+			} else
+
+					if (x->next == NULL) {
+				printf("%s\n", x->diretory);
+			} else {
+				/*ler o resto do elemento*/
+				for (; x->next != NULL; x = x->next) {
+					printf("%s\n", x->diretory);
+				}
+				/*ler o ultimo do elemento*/
+
+				printf("%s\n", x->diretory);
+			}
 		}
 
 		scanf("%s", ler_input);
@@ -62,10 +100,4 @@ void help_func() {
 	}
 }
 
-void set_func(link* order) {
-	char buffer[MAX_SIZE];
-	scanf("%s", buffer);
-	*order = insertEnd(*order, buffer);
-
-	printf("sucesso\n");
-}
+void set_func(link* order) { *order = insertEnd(*order); }

@@ -10,14 +10,18 @@
  * delete*/
 
 typedef struct node {
-	char *text;
+	char *diretory;
+	char *value;
 	struct node *next;
+	struct node *abaixo;
 } * link;
 
 link NEW_Node(char *buffer);
-link insertEnd(link head, char *text);
-link delete_search(link head, char *text);
-void FREEnode(link t);
-void print(link head);
+link insertEnd(link head);
+link criar_folder_final(char *dir);
+link criar_folder(char *dir);
+void print(link head, char *path, int cond);
+char *find_func(link order, char *word);
+int list_func(link head, char *word);
 
 #endif

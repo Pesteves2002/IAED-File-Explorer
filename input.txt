@@ -1,4 +1,6 @@
-set ola
-set bruh
-set c
-print quit
+set ola/b 2 5 7
+set bruh/c 3
+set c 4
+set ola/d 8
+print
+quit
