@@ -12,8 +12,8 @@
 
 int main() {
 	char ler_input[CMD_SZ];
-	link order = NULL;
-	STinit(17);
+	link LinkedList = NULL;
+	STinit(HASH_SZ_INIT);
 
 	scanf("%s", ler_input);
 
@@ -22,59 +22,55 @@ int main() {
 			help_func();
 		else if (!strcmp(ler_input, SET_CMD)) {
 			getchar();
-			set_func(&order);
+			set_func(&LinkedList);
 		} else if (!strcmp(ler_input, PRINT_CMD)) {
-			print(order);
+			print(LinkedList);
 		} else if (!strcmp(ler_input, FIND_CMD)) {
 			char work[67000];
 			int i;
 			scanf("%s", work);
 			i = strlen(work);
 			while (work[--i] == '/') work[i] = '\0';
-			strcpy(work, find_func(order, work));
+			strcpy(work, find_func(LinkedList, work));
 			if (strcmp(work, "0")) printf("%s\n", work);
 		} else if (!strcmp(ler_input, LIST_CMD)) {
 			char work[67000];
 			char c = getchar();
 			int i;
-			link x = order;
+			link x = LinkedList;
 			int aux;
-			/*se for espaco*/
 			if (c != '\n') {
 				scanf("%s", work);
 				i = strlen(work);
 				while (work[--i] == '/') work[i] = '\0';
-				aux = list_func(order, work);
+				aux = list_func(LinkedList, work);
 				if (aux) printf(NOT_FOUND);
-			}
-			/*dar print da raiz*/
-			else {
-				if (order != NULL) {
+			} else {
+				if (LinkedList != NULL) {
 					if (x->next == NULL) {
 						printf("%s\n", x->diretory);
 					} else {
-						link x = order;
-
+						link x = LinkedList;
 						link alfa[1000];
 						link aux[1000];
 						int i = 0;
 						int l;
-						/*caso de ser apenas 1 valor*/
+
 						if (x->next == NULL) {
 							printf("%s\n", x->diretory);
 						}
 
-						/*ler o resto do elemento*/
 						for (; x->next != NULL; x = x->next) {
 							alfa[i++] = x;
 						}
-						/*ler o ultimo do elemento*/
 
 						alfa[i] = x;
 
 						mergesort(alfa, 0, i, aux);
 
-						for (l = 0; l <= i; l++) printf("%s\n", alfa[l]->diretory);
+						for (l = 0; l <= i; l++) {
+							printf("%s\n", alfa[l]->diretory);
+						}
 					}
 				}
 			}
@@ -88,9 +84,9 @@ int main() {
 				scanf("%s", work);
 				i = strlen(work);
 				while (work[--i] == '/') work[i] = '\0';
-				order = delete_func(order, work);
+				LinkedList = delete_func(LinkedList, work);
 			} else {
-				order = aux_delete(order);
+				LinkedList = aux_delete(LinkedList);
 			}
 		} else if (!strcmp(ler_input, SEARCH_CMD)) {
 			char value[66000];
@@ -112,7 +108,7 @@ int main() {
 		}
 		scanf("%s", ler_input);
 	}
-	apagar(&order);
+	delete_all(&LinkedList);
 	STfree();
 
 	return 0;

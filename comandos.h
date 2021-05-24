@@ -27,6 +27,8 @@
 #define CMD_SZ 10
 #define MAX_SIZE 66666
 
+#define HASH_SZ_INIT 17
+
 struct node {
 	/*stores the directory*/
 	char *diretory;
@@ -37,7 +39,7 @@ struct node {
 	/*points to next directory */
 	struct node *next;
 	/*points to the directory below*/
-	struct node *abaixo;
+	struct node *below;
 };
 
 typedef struct node Node;
@@ -48,7 +50,7 @@ void help_func();
 void set_func(link *order);
 
 /*auxiliar function to insert or change an element*/
-link insertEnd(link head, char path[]);
+link set_func_aux(link head, char path[]);
 
 /*auxiliar function that creates a new folder*/
 link criar_folder(char *dir, char path[]);
@@ -68,6 +70,6 @@ link delete_func(link head, char *path);
 link aux_delete(link head);
 
 /*auxiliar function that deletes the whole list of folders*/
-void apagar(link *head);
+void delete_all(link *head);
 
 #endif

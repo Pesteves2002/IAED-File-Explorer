@@ -22,10 +22,10 @@ void help_func() {
 
 void set_func(link *order) {
 	char path[6000] = {0};
-	*order = insertEnd(*order, path);
+	*order = set_func_aux(*order, path);
 }
 
-link insertEnd(link head, char path[]) {
+link set_func_aux(link head, char path[]) {
 	link x = head;
 	char dir[67000];
 	char c = getchar();
@@ -35,23 +35,22 @@ link insertEnd(link head, char path[]) {
 		c = getchar();
 	}
 
-	/*obter a proxima diretoria */
+	/*get the next direcotry */
 	while (c != '/' && c != ' ') {
 		dir[i++] = c;
 		c = getchar();
 	}
 	dir[i++] = '\0';
 
-	/*caso de ser vazia*/
+	/*if it is Empty*/
 	if (head == NULL) {
 		if (c == ' ') {
 			return criar_folder_final(dir, path);
 		}
-		/*se houver tab, criamos um folder*/
 		return criar_folder(dir, path);
 	}
 
-	/*condicao para mudar um valor*/
+	/*change the value*/
 	if (c == ' ') {
 		char troca[67000];
 		int i = 0;
@@ -72,26 +71,24 @@ link insertEnd(link head, char path[]) {
 			}
 		}
 	}
-
-	/*verificar quando chega ao fim da lista*/
+	/*if there's a directory with that name, we go to the below*/
 	for (; x->next != NULL; x = x->next) {
-		/*se forem iguais chama para a mesma diretoria */
 		if (!strcmp(dir, x->diretory)) {
 			strcat(path, "/");
 			strcat(path, dir);
-			x->abaixo = insertEnd(x->abaixo, path);
+			x->below = set_func_aux(x->below, path);
 			return head;
 		}
 	}
 	if (!strcmp(dir, x->diretory)) {
 		strcat(path, "/");
 		strcat(path, dir);
-		x->abaixo = insertEnd(x->abaixo, path);
+		x->below = set_func_aux(x->below, path);
 		return head;
 	}
-
-	if (c == ' ') x->next = criar_folder_final(dir, path);
-	/*se houver tab, criamos um folder*/
+	/*we create in the next directory*/
+	if (c == ' ')
+		x->next = criar_folder_final(dir, path);
 	else
 		x->next = criar_folder(dir, path);
 
@@ -118,7 +115,7 @@ link criar_folder_final(char *dir, char path[]) {
 	new->fullpath = (char *)malloc(sizeof(char) * (strlen(path) + 1));
 	strcpy(new->fullpath, path);
 
-	new->abaixo = NULL;
+	new->below = NULL;
 	new->next = NULL;
 
 	STinsert(new);
@@ -139,7 +136,7 @@ link criar_folder(char *dir, char path[]) {
 	strcpy(new->fullpath, path);
 
 	new->next = NULL;
-	new->abaixo = NULL;
+	new->below = NULL;
 	new->value = NULL;
 
 	while (c == '/') {
@@ -151,7 +148,8 @@ link criar_folder(char *dir, char path[]) {
 		c = getchar();
 	}
 	new_dir[i++] = '\0';
-	/*se houver um espaco, quer dizer q vamos guardar o valor*/
+
+	/*if it the last directory and theres no next to it*/
 	if (c == ' ' && strcmp("", new_dir)) {
 		link final = (link)malloc(sizeof(Node));
 		char valor[2000];
@@ -168,7 +166,7 @@ link criar_folder(char *dir, char path[]) {
 		final->value = (char *)malloc(sizeof(char) * j);
 		strcpy(final->value, valor);
 
-		final->abaixo = NULL;
+		final->below = NULL;
 		final->next = NULL;
 
 		strcat(path, "/");
@@ -178,11 +176,10 @@ link criar_folder(char *dir, char path[]) {
 		strcpy(final->fullpath, path);
 		STinsert(final);
 
-		new->abaixo = final;
+		new->below = final;
 		return new;
 	}
 
-	/*adicionar ao new*/
 	if (c == ' ') {
 		char valor[2000];
 		int i = 0;
@@ -195,7 +192,7 @@ link criar_folder(char *dir, char path[]) {
 		new->value = (char *)malloc(sizeof(char) * i);
 		strcpy(new->value, valor);
 
-		new->abaixo = NULL;
+		new->below = NULL;
 		new->next = NULL;
 		STinsert(new);
 		return new;
@@ -205,8 +202,8 @@ link criar_folder(char *dir, char path[]) {
 		strcat(path, "/");
 		strcat(path, dir);
 
-		/*se houver tab, criamos um folder*/
-		new->abaixo = criar_folder(new_dir, path);
+		/*we create the folder below*/
+		new->below = criar_folder(new_dir, path);
 	}
 
 	return new;
@@ -218,7 +215,7 @@ void print(link head) {
 		if (head->value != NULL) {
 			printf("%s/%s %s\n", head->fullpath, head->diretory, head->value);
 		}
-		print(head->abaixo);
+		print(head->below);
 		print(head->next);
 	}
 }
@@ -284,14 +281,14 @@ char *find_func(link head, char *word) {
 		}
 		if (x->next == NULL) {
 			if (!strcmp(x->diretory, dir))
-				return find_func(x->abaixo, (word + indice));
+				return find_func(x->below, (word + indice));
 		}
 		for (x = head; x->next != NULL; x = x->next) {
 			if (!strcmp(x->diretory, dir))
-				return find_func(x->abaixo, (word + indice));
+				return find_func(x->below, (word + indice));
 		}
 		if (!strcmp(x->diretory, dir)) {
-			return find_func(x->abaixo, (word + indice));
+			return find_func(x->below, (word + indice));
 		}
 	}
 	printf(NOT_FOUND);
@@ -332,11 +329,11 @@ int list_func(link head, char *word) {
 					int i = 0;
 					int l;
 
-					if (aux->abaixo == NULL) {
+					if (aux->below == NULL) {
 						return 0;
 					}
 
-					x = aux->abaixo;
+					x = aux->below;
 					/*if there's only 1 value*/
 					if (x->next == NULL) {
 						printf("%s\n", x->diretory);
@@ -365,14 +362,14 @@ int list_func(link head, char *word) {
 
 		if (x->next == NULL) {
 			if (!strcmp(x->diretory, dir))
-				return list_func(x->abaixo, (word + indice));
+				return list_func(x->below, (word + indice));
 		}
 		for (x = head; x->next != NULL; x = x->next) {
 			if (!strcmp(x->diretory, dir))
-				return list_func(x->abaixo, (word + indice));
+				return list_func(x->below, (word + indice));
 		}
 		if (!strcmp(x->diretory, dir)) {
-			return list_func(x->abaixo, (word + indice));
+			return list_func(x->below, (word + indice));
 		}
 	}
 	return -1;
@@ -415,7 +412,7 @@ link delete_func(link head, char *path) {
 			free(x->diretory);
 			free(x->fullpath);
 
-			if (x->abaixo != NULL) aux_delete(x->abaixo);
+			if (x->below != NULL) aux_delete(x->below);
 			if (x->value != NULL) {
 				STdelete(x);
 				free(x->value);
@@ -427,7 +424,7 @@ link delete_func(link head, char *path) {
 		for (; x != NULL; x = x->next) {
 			if (!strcmp(x->diretory, dir)) {
 				aux->next = x->next;
-				aux_delete(x->abaixo);
+				aux_delete(x->below);
 				if (x->value != NULL) {
 					STdelete(x);
 					free(x->value);
@@ -450,18 +447,18 @@ link delete_func(link head, char *path) {
 		x = head;
 		if (x->next == NULL) {
 			if (!strcmp(x->diretory, dir))
-				x->abaixo = delete_func(x->abaixo, (path + indice));
+				x->below = delete_func(x->below, (path + indice));
 			else
 				printf(NOT_FOUND);
 		} else {
 			for (x = head; x->next != NULL; x = x->next) {
 				if (!strcmp(x->diretory, dir)) {
-					x->abaixo = delete_func(x->abaixo, (path + indice));
+					x->below = delete_func(x->below, (path + indice));
 					return head;
 				}
 			}
 			if (!strcmp(x->diretory, dir)) {
-				x->abaixo = delete_func(x->abaixo, (path + indice));
+				x->below = delete_func(x->below, (path + indice));
 				return head;
 			} else {
 				printf(NOT_FOUND);
@@ -471,7 +468,7 @@ link delete_func(link head, char *path) {
 	return head;
 }
 
-void apagar(link *order) { *order = aux_delete(*order); }
+void delete_all(link *order) { *order = aux_delete(*order); }
 
 link aux_delete(link head) {
 	if (head == NULL) return head;
@@ -479,8 +476,8 @@ link aux_delete(link head) {
 	if (head->next != NULL) {
 		aux_delete(head->next);
 	}
-	if (head->abaixo != NULL) {
-		aux_delete(head->abaixo);
+	if (head->below != NULL) {
+		aux_delete(head->below);
 	}
 	/*remove from the hashtable*/
 	if (head->value != NULL) STdelete(head);
